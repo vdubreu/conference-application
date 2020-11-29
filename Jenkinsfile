@@ -4,7 +4,7 @@ pipeline {
         maven "Maven 3.6.3"
     }
     stages {
-        stage('build conference-app') {
+        stage('build conference-app - Maven') {
           steps{
               git url: ' https://github.com/promogekko/conference-application.git'
               sh "mvn clean install package"
@@ -31,7 +31,7 @@ pipeline {
                     docker build -t conference-app:latest . "
                }
         }
-        stage('Run  conference-app Docker ') {
+        stage('Run  conference-app-test container local  ') {
           steps {
                 script {
                  def set_container = sh(script: ''' CONTAINER_NAME="conference-app-test"
@@ -44,7 +44,7 @@ pipeline {
                }
             }
         }
-        stage('AWX - install docker on a remote host') {
+        stage('AWX-- install docker on a remote host') {
           steps {
                 ansiColor('xterm') {
                 ansibleTower jobTemplate: 'Install_docker', jobType: 'run', throwExceptionWhenFail: false, towerCredentialsId: 'ansible_awx', towerLogLevel: 'full', towerServer: 'AWX'   
@@ -58,6 +58,5 @@ pipeline {
                 }
             }
         }
-        
     }
 }
