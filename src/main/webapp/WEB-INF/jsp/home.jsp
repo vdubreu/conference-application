@@ -6,7 +6,7 @@
 	  <div class="container">
 	    <div class="panel panel-default">
 	      <div class="panel-body">
-	        <h2>Open Space Software Development @ Herve meftah 2020</h2>
+	        <h2>Crunchydevops @ Herve meftah 2020</h2>
 	        <p>Auf Konferenzen wird viel &uuml;ber Methoden und Technologien gesprochen.
 	        Wir m&ouml;chten herausfinden, wie sich Dinge, die wir f&uuml;r richtig und wertvoll halten, in der Praxis
             anf&uuml;hlen. Daher laden wir euch zum codecentric OpenSpace Development ein,€“ ein sicherer Raum, in dem
