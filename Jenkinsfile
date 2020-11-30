@@ -4,14 +4,14 @@ pipeline {
         maven "Maven 3.6.3"
     }
     stages {
-        stage('build conference-app - Maven') {
+        stage('build conference-app') {
           steps{
               git url: ' https://github.com/promogekko/conference-application.git'
               sh "mvn clean install package"
               archiveArtifacts artifacts: '**/*.war', followSymlinks: false
            }
         }
-        
+
         stage('Build conference-app Sonarqube') {
           steps {
                 withSonarQubeEnv('SonarQube') {
@@ -31,7 +31,7 @@ pipeline {
                     docker build -t conference-app:latest . "
                }
         }
-        stage('Run  conference-app-test container local  ') {
+        stage('Run  conference-app Docker ') {
           steps {
                 script {
                  def set_container = sh(script: ''' CONTAINER_NAME="conference-app-test"
@@ -44,19 +44,32 @@ pipeline {
                }
             }
         }
-        stage('AWX-- install docker on a remote host') {
+        stage('AWX - install docker on a remote host') {
           steps {
                 ansiColor('xterm') {
-                ansibleTower jobTemplate: 'Install_docker', jobType: 'run', throwExceptionWhenFail: false, towerCredentialsId: 'ansible_awx', towerLogLevel: 'full', towerServer: 'AWX'   
+                ansibleTower jobTemplate: 'Install_docker', jobType: 'run', throwExceptionWhenFail: false, towerCredentialsId: 'ansible_awx', towerLogLevel: 'full', towerServer: 'AWX'
                 }
             }
         }
+        stage('Push Container to Docker Hub') {
+          steps {
+            withCredentials([usernamePassword(credentialsId: 'dokcerhub', passwordVariable: 'USER_PASSWORD', usernameVariable: 'USER_NAME')]) {
+            script {
+                 def set_dockerhub = sh(script: ''' docker login -u $USER_NAME -p $USER_PASSWORD
+                                                    docker image tag conference-app systemdevformations/conference-app
+                                                    docker push systemdevformations/conference-app
+                                                 ''')
+               }
+             }
+           }
+         }
         stage('Run container conference-app on a remote host') {
           steps {
                 ansiColor('xterm') {
-                ansibleTower jobTemplate: 'Conference-app', jobType: 'run', throwExceptionWhenFail: false, towerCredentialsId: 'ansible_awx', towerLogLevel: 'full', towerServer: 'AWX'   
+                ansibleTower jobTemplate: 'Conference-app', jobType: 'run', throwExceptionWhenFail: false, towerCredentialsId: 'ansible_awx', towerLogLevel: 'full', towerServer: 'AWX'
                 }
             }
         }
+
     }
 }
