@@ -21,6 +21,7 @@ pipeline {
         }
         stage('Build conference-app Nexus') {
           steps {
+                copyArtifacts filter: '**/*.war', fingerprintArtifacts: true, projectName: 'conference-app', selector: lastSuccessful()
                 nexusPublisher nexusInstanceId: 'Nexus', nexusRepositoryId: 'maven-releases', packages: [[$class: 'MavenPackage', mavenAssetList: [[classifier: '', extension: '', filePath: 'target/conference-app-3.0.0.war']], mavenCoordinate: [artifactId: 'conference-app', groupId: 'de.codecentric', packaging: 'war', version: '1.0']]]
                }
         }
