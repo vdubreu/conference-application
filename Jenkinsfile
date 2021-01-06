@@ -47,13 +47,13 @@ pipeline {
         stage('AWX - install docker on a remote host') {
           steps {
                 ansiColor('xterm') {
-                ansibleTower jobTemplate: 'Install_docker', jobType: 'run', throwExceptionWhenFail: false, towerCredentialsId: 'ansible_awx', towerLogLevel: 'full', towerServer: 'AWX'
+                ansibleTower jobTemplate: 'Install_docker', jobType: 'run', throwExceptionWhenFail: false, towerCredentialsId: 'awx', towerLogLevel: 'full', towerServer: 'AWX'
                 }
             }
         }
         stage('Push Container to Docker Hub') {
           steps {
-            withCredentials([usernamePassword(credentialsId: 'dokcerhub', passwordVariable: 'USER_PASSWORD', usernameVariable: 'USER_NAME')]) {
+            withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'USER_PASSWORD', usernameVariable: 'USER_NAME')]) {
             script {
                  def set_dockerhub = sh(script: ''' docker login -u $USER_NAME -p $USER_PASSWORD
                                                     docker image tag conference-app systemdevformations/conference-app
