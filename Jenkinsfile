@@ -4,6 +4,11 @@ pipeline {
         maven "Maven 3.6.3"
     }
     stages {
+        stage('CleanWorkspace') {
+          steps {
+              cleanWs()
+          }
+        }
         stage('build conference-app') {
           steps{
               git url: ' https://github.com/promogekko/conference-application.git'
