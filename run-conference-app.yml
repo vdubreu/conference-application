@@ -7,7 +7,7 @@
       register: image
     - name: Delete image if exist
       shell:  docker rmi -f  $(docker images |grep 'conference-app')
-      when: conference_id.stdout != ""
+      when: image.stdout != ""
     - name: Docker test exists
       shell: docker ps --all --quiet --filter=name="conference-test"
       register: conference_id
