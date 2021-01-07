@@ -11,6 +11,7 @@
     - name: Docker image exists
       shell:  docker images | grep 'conference-app'
       register: image
+      ignore_errors: yes
     - name: Delete image if exist
       shell:  docker rmi -f  $(docker images |grep 'conference-app')
       when: image.stdout != ""
